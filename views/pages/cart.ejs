@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+          <h2><%=title%></h2>
+
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title">Total items: <span class="badge"><%=total_items%></span></h3>
+            </div>
+            <div class="panel-body">
+
+              <table class="table table-striped">
+              <thead>
+                <tr> <th>#</th> <th>Product</th> <th>Amount</th> <th>Subtotal</th> </tr>
+              </thead>
+              <tbody>
+
+              <% carts.forEach(function(cart, i) { %>
+
+                <tr> <th scope="row"><%=i+1%></th> <td><%=cart.name%></td> <td><%=cart.amount%></td> <td>Rp.<%=cart.subtotal%></td> </tr>
+
+              <% }); %>
+
+              </tbody>
+              </table>
+
+            </div>
+          </div>
+
+          <div class="well clearfix">
+            <div class="pull-left total_price"><p>Total price: </p><span>Rp. <%=total_price%></span></div>
+            <p><a class="btn btn-success btn-lg pull-right" href="checkout" role="button">Checkout</a></p>
+          </div>
+
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+    <% include ../partials/scripts %>
+</body>
+</html>
