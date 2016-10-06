@@ -4,9 +4,9 @@ var router = express.Router();
 // index page
 router.get('/', function(req, res) {
   var products = [
-        { name: 'Apel', location: "Malang", price:2000, geolocation:"" },
-        { name: 'Jeruk', location: "Bali", price:2000, geolocation:"" },
-        { name: 'Bawang Merah', location: "Brebes", price:2000, geolocation:"" }
+        { name: 'Apel', location: "Malang", price:2000, geolocation:"-7.978644,112.5967635" },
+        { name: 'Jeruk', location: "Bali", price:2000, geolocation:"-8.4553561,114.7913883" },
+        { name: 'Bawang Merah', location: "Brebes", price:2000, geolocation:"-6.865172,109.0089218" }
     ];
     var title = "Product List";
 

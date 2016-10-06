@@ -36,12 +36,32 @@
             </div>
           </div>
 
-          <div class="well clearfix">
-            <div class="pull-left total_price"><p>Total price: </p><span>Rp. <%=total_price%></span></div>
-            <p><a class="btn btn-success btn-lg pull-right" href="checkout" role="button">Checkout</a></p>
+          <div class="row well clearfix">
+            <div class="col-xs-12 col-sm-3">
+              <div class="pull-left total_price"><p>Total price: </p><span>Rp. <%=total_price%></span></div>
+            </div>
+            <div class="col-xs-12 col-sm-offset-5 col-sm-4 btn-group">
+              <a class="btn btn-danger btn-md btn_emptycart" href="/" role="button">Empty Cart</a>
+              <a class="btn btn-primary btn-md" href="/" role="button">Continue Shopping</a>
+              <a class="btn btn-success btn-md" href="checkout" role="button">Checkout</a>
+            </div>
           </div>
 
     </main>
+
+    <div id="modal_emptycart" class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Cart Empty</h4>
+            </div>
+            <div class="modal-body">
+              <p>All product has been removed from cart.</p>
+            </div>
+        </div>
+      </div>
+    </div>
 
     <footer>
         <% include ../partials/footer %>
