@@ -1,3 +1,6 @@
+// GLOBAL VARIABLE
+var cart;
+
 /* Create Cart Object
 * properties:
 *   items
@@ -102,6 +105,12 @@
 			this.storage.setItem( this.total_items, total_items );
 		},
 
+    /* Get object representation of cart items */
+		_getObject: function( ) {
+			return this._toJSONObject( this.storage.getItem( this.cartName ) );
+
+		},
+
 		/* Custom price based on location of product relative to user location
 		 * @param qty Number the total quantity of items
 		 * @returns price
@@ -118,14 +127,30 @@
 })(jQuery);
 
 function updateCartBadgeIcon(){
-  var amount = sessionStorage.getItem('total_items')!=null?sessionStorage.getItem('total_items'):0;
+  var amount = cart.storage.getItem('total_items')!=null?sessionStorage.getItem('total_items'):0;
   $('.cart_amount').html(amount);
 }
 
+function renderTableRow(){
+  var items = [] ;
+  if( cart._getObject()!=null){
+     items = cart._getObject().items;
+  }
+
+  var table_body = $('.cart_container table tbody');
+  table_body.empty();
+
+  items.forEach(function(item, index){
+    var row = '<tr> <th scope="row">'+ (index+1) +'</th> <td>'+ item.productname +'</td> <td>'+ item.amount +'</td> <td>Rp.'+ 2000 +'</td> </tr>';
+    table_body.append(row);
+  });
+}
+
 $(document).ready(function(){
-  var cart = new $.Cart();
+  cart = (typeof cart !== "undefined" ? cart : new $.Cart() );
 
 	updateCartBadgeIcon();
+  renderTableRow();
 
   // eventHandler addToCart
   $('.btn_addcart').bind('click', function(e){
@@ -171,6 +196,7 @@ $(document).ready(function(){
     // empty cart
     cart._emptyCart();
     updateCartBadgeIcon();
+    renderTableRow();
 
   });
 

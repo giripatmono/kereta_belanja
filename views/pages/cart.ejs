@@ -12,9 +12,9 @@
     <main>
           <h2><%=title%></h2>
 
-          <div class="panel panel-default">
+          <div class="panel panel-default cart_container">
             <div class="panel-heading">
-              <h3 class="panel-title">Total items: <span class="badge"><%=total_items%></span></h3>
+              <h3 class="panel-title">Total items: <span class="badge cart_amount"><%=total_items%></span></h3>
             </div>
             <div class="panel-body">
 
@@ -23,12 +23,6 @@
                 <tr> <th>#</th> <th>Product</th> <th>Amount</th> <th>Subtotal</th> </tr>
               </thead>
               <tbody>
-
-              <% carts.forEach(function(cart, i) { %>
-
-                <tr> <th scope="row"><%=i+1%></th> <td><%=cart.name%></td> <td><%=cart.amount%></td> <td>Rp.<%=cart.subtotal%></td> </tr>
-
-              <% }); %>
 
               </tbody>
               </table>
