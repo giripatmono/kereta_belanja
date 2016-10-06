@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+          <h2><%=title%></h2>
+          <form class="cart_container" method="POST" action="" enctype="multipart/formdata">
+
+
+                <table class="table table-striped">
+                <thead>
+                  <tr> <th>#</th> <th>Product</th> <th>Amount</th> <th>Subtotal</th> </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+                </table>
+
+                <div class="row well clearfix">
+                  <div class="col-xs-12 col-sm-3">
+                    <div class="pull-left total_price"><p>Total price: </p><span>Rp.</span> <span class="nominal">0</span></div>
+                  </div>
+                </div>
+
+                <fieldset>
+
+                   <div class="form-group col-xs-12 col-sm-6">
+                    <label for="name" class="control-label">Nama:</label>
+                    <input type="text" class="form-control" name="name" required>
+                  </div>
+                   <div class="form-group col-xs-12 col-sm-6">
+                    <label for="email" class="control-label">Email:</label>
+                    <input type="email" class="form-control" name="email" required>
+                  </div>
+                   <div class="form-group col-xs-12 col-sm-6">
+                    <label for="kota" class="control-label">Kota/Kabupaten:</label>
+                    <input type="text" class="form-control" name="kota" required>
+                  </div>
+                   <div class="form-group col-xs-12 col-sm-6">
+                    <label for="kodepos" class="control-label">Kodepos:</label>
+                    <input type="text" class="form-control" name="kodepos" required>
+                  </div>
+                   <div class="form-group col-xs-12 col-sm-6">
+                    <label for="tipe_pembayaran" class="control-label">Tipe Pembayaran:</label>
+                    <select type="text" class="form-control" name="tipe_pembayaran" required>
+                      <option value="">- Silahkan Pilih -</option>
+                      <option value="transfer">Transfer Bank</option>
+                      <option value="cc">Kartu Kredit</option>
+                    </select>
+                  </div>
+                  <div class="form-group col-xs-12 col-sm-6">
+                    <label for="alamat" class="control-label">Alamat:</label>
+                    <textarea class="form-control" name="alamat" required></textarea>
+                  </div>
+
+                </fieldset>
+
+
+              <div class="form-group col-xs-12 text-right">
+                <button class="btn btn-success btn-lg" role="button">Create Order</button>
+              </div>
+          </form>
+
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+    <% include ../partials/scripts %>
+</body>
+</html>

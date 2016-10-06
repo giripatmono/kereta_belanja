@@ -69,7 +69,7 @@ var cart;
 		 * @param values Object the object to be added to the cart
 		 * @returns void
 		 */
-		_addToCart: function( productname ) {
+		_addToCart: function( productname, price ) {
 
       // get cart items
 			var cart = this.storage.getItem( this.cartName );
@@ -94,6 +94,7 @@ var cart;
         var item = {
           "productname":productname,
           "amount":1,
+          "price":price
         }
 			  cartObject.items.push( item );
       }
@@ -140,10 +141,17 @@ function renderTableRow(){
   var table_body = $('.cart_container table tbody');
   table_body.empty();
 
+  var total_price = 0;
   items.forEach(function(item, index){
-    var row = '<tr> <th scope="row">'+ (index+1) +'</th> <td>'+ item.productname +'</td> <td>'+ item.amount +'</td> <td>Rp.'+ 2000 +'</td> </tr>';
+    total_price += (item.price*item.amount);
+    var row = '<tr> <th scope="row">'+ (index+1) +'</th> <td>'+ item.productname +'</td> <td>'+ item.amount +'</td> <td>Rp.'+ (item.price*item.amount) +'</td>'
+              + '<input type="hidden" name="productname" value="' + item.productname + '">'
+              + '<input type="hidden" name="amount" value="' + item.amount + '">'
+              + '<input type="hidden" name="subtotal" value="' + (item.price*item.amount) + '">'
+              + '</tr>';
     table_body.append(row);
   });
+  $('.total_price span.nominal').html(total_price);
 }
 
 $(document).ready(function(){
@@ -168,7 +176,7 @@ $(document).ready(function(){
     */
 
     // add product to sessionStorage
-    cart._addToCart($(this).data('productname'));
+    cart._addToCart($(this).data('productname'), $(this).data('baseprice'));
 
     // update cart total
     updateCartBadgeIcon();

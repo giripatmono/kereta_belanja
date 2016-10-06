@@ -21,9 +21,9 @@
                 <div class="caption clearfix">
                   <h3><%= product.name %> (<%= product.location %>)</h3>
                   <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <div class="price">Price: Rp.<%= product.price %></div>
+                  <div class="price">Price: Rp.<%= product.baseprice %></div>
                   <p>
-                    <a href="#" class="btn btn-primary pull-right btn_addcart" role="button" data-productname="<%= product.name %>" data-price="<%= product.price %>" data-geolocation="<%= product.geolocation %>">
+                    <a href="#" class="btn btn-primary pull-right btn_addcart" role="button" data-productname="<%= product.name %>" data-baseprice="<%= product.baseprice %>" data-geolocation="<%= product.geolocation %>">
                     Add to cart
                     </a>
                   </p>
