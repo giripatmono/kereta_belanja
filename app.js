@@ -9,7 +9,6 @@ var db = 'mongodb://localhost/kereta_belanja';
 mongoose.connect(db);
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var orders = require('./routes/orders');
 var checkout = require('./routes/checkout');
 var app = express();
@@ -25,7 +24,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 app.use('/orders', orders);
 app.use('/checkout', checkout);
 
