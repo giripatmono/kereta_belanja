@@ -152,6 +152,8 @@ function renderTableRow(){
     table_body.append(row);
   });
   $('.total_price span.nominal').html(total_price);
+  $('.input_total_price').val(total_price);
+  input_total_price
 }
 
 $(document).ready(function(){

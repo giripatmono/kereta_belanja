@@ -5,10 +5,15 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mongoose = require('mongoose');
 
+var db = 'mongodb://localhost/kereta_belanja';
+mongoose.connect(db);
+
 var routes = require('./routes/index');
+var users = require('./routes/users');
+var orders = require('./routes/orders');
+var checkout = require('./routes/checkout');
 var app = express();
 
-mongoose.connect('mongodb://localhost/kereta_belanja');
 
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -20,6 +25,10 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
+app.use('/users', users);
+app.use('/orders', orders);
+app.use('/checkout', checkout);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <% include ../partials/head %>
+</head>
+<body class="container">
+
+    <header>
+        <% include ../partials/header %>
+    </header>
+
+    <main>
+          <h2><%=title%></h2>
+
+                <table class="table table-striped">
+                <thead>
+                  <tr> <th># Order</th> <th>Name</th> <th>Total Price</th> </tr>
+                </thead>
+                <tbody>
+
+                  <% orders.forEach(function(item, index) { %>
+
+                   <tr>
+                     <th scope="row"> <%=index+1%></th>
+                     <td><%=item.name%></td>
+                     <td>Rp.<%=item.total_price%></td>
+                     <td><a href="/orders/<%=item._id%>">Detail</a></td>
+                   </tr>
+
+                  <% }); %>
+
+                </tbody>
+                </table>
+
+    </main>
+
+    <footer>
+        <% include ../partials/footer %>
+    </footer>
+
+    <% include ../partials/scripts %>
+</body>
+</html>
