@@ -16,12 +16,13 @@
 
           <% products.forEach(function(product) { %>
             <div class="col-sm-6 col-md-4">
-              <div class="thumbnail">
+              <div class="thumbnail product_thumb">
                 <img src="images/350_150.png" alt="product image">
                 <div class="caption clearfix">
                   <h3><%= product.name %> (<%= product.location %>)</h3>
                   <p class="description">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                  <div class="price">Price: Rp.<%= product.baseprice %></div>
+                  <div class="price">Base Price: Rp. <%= product.baseprice %></div>
+                  <div class="final_price">Final Price(with distance): Rp. <span><%= product.baseprice %><span></div>
                   <p>
                     <a href="#" class="btn btn-primary pull-right btn_addcart" role="button" data-productname="<%= product.name %>" data-baseprice="<%= product.baseprice %>" data-geolocation="<%= product.geolocation %>">
                     Add to cart
@@ -55,5 +56,10 @@
     </footer>
 
     <% include ../partials/scripts %>
+    <script>
+    $(function(){
+      renderProductFinalPrice();
+    });
+    </script>
 </body>
 </html>

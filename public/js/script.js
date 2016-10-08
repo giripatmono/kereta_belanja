@@ -1,5 +1,6 @@
 // GLOBAL VARIABLE
 var cart;
+var user_lat='', user_lng=''; // user geolocation
 
 /* Create Cart Object
 * properties:
@@ -9,7 +10,6 @@ var cart;
 * method:
 *   addToCart
 */
-
 (function( $ ) {
   $.Cart = function() {
     this.init();
@@ -69,19 +69,16 @@ var cart;
 		 * @param values Object the object to be added to the cart
 		 * @returns void
 		 */
-		_addToCart: function( productname, price ) {
+		_addToCart: function( productname, price, product_geolocation ) {
 
       // get cart items
 			var cart = this.storage.getItem( this.cartName );
 			var cartObject = this._toJSONObject( cart );
       var total_items = parseInt( this.storage.getItem(this.total_items) );
 
-      console.log(cartObject);
       // search existing item
       index_found = -1;
       for (var key in cartObject.items){
-        console.log(key);
-        console.log(cartObject.items[0]);
         if(cartObject.items[key].productname.indexOf(productname)!=-1){
           index_found = key;
           break;
@@ -94,7 +91,7 @@ var cart;
         var item = {
           "productname":productname,
           "amount":1,
-          "price":price
+          "price":this._calculatePrice(price, product_geolocation)
         }
 			  cartObject.items.push( item );
       }
@@ -112,24 +109,75 @@ var cart;
 
 		},
 
-		/* Custom price based on location of product relative to user location
+		/* Custom price.
 		 * @param qty Number the total quantity of items
 		 * @returns price
 		 */
-		_calculatePrice: function( qty, product_location ) {
-			var price = 0;
+		_calculatePrice: function( price, product_geolocation ) {
+      console.log('product_geolocation:'+product_geolocation);
+      coords_array = product_geolocation.split(',');
+      product_lat = coords_array[0];
+      product_lng = coords_array[1];
 
-			return price;
+      distance = this._calculateDistance(product_lat, product_lng);
 
+			return Math.floor(price*distance);
+
+		},
+
+		/* Calculate distance (in km) based on geolocation.
+		 * @param product_lat, product_lng
+		 * @returns distance
+		 */
+		_calculateDistance: function( product_lat, product_lng ) {
+      if(user_lat=='' || user_lng=='' || product_lat=='' || product_lng=='')
+          return 1 ; // user geolocation is empty
+
+      user_lat = Number(user_lat);
+      user_lng = Number(user_lng);
+      product_lat = Number(product_lat);
+      product_lng = Number(product_lng);
+
+      var deg2rad = function(deg) {
+        return deg * (Math.PI/180)
+      }
+
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(product_lat-user_lat);  // deg2rad below
+      var dLng = deg2rad(product_lng-user_lng);
+      var a =
+          Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(deg2rad(product_lat)) * Math.cos(deg2rad(user_lat)) *
+          Math.sin(dLng/2) * Math.sin(dLng/2)
+      ;
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var d = R * c; // Distance in km
+      console.log('distance result(km):'+d);
+
+      return d;
 		},
 
   };
 
 })(jQuery);
 
+// thousand separator number
+function formatThousandSep(num) {
+  return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.")
+}
+
 function updateCartBadgeIcon(){
   var amount = cart.storage.getItem('total_items')!=null?sessionStorage.getItem('total_items'):0;
   $('.cart_amount').html(amount);
+}
+
+function renderProductFinalPrice(){
+ $('.product_thumb').each(function(){
+   var price = $(this).find('.btn_addcart').data('baseprice');
+   var product_geolocation = $(this).find('.btn_addcart').data('geolocation');
+   var final_price = formatThousandSep( cart._calculatePrice( price, product_geolocation ) );
+   $(this).find('.final_price span').html(final_price);
+ });
 }
 
 function renderTableRow(){
@@ -144,18 +192,30 @@ function renderTableRow(){
   var total_price = 0;
   items.forEach(function(item, index){
     total_price += (item.price*item.amount);
-    var row = '<tr> <th scope="row">'+ (index+1) +'</th> <td>'+ item.productname +'</td> <td>'+ item.amount +'</td> <td>Rp.'+ (item.price*item.amount) +'</td>'
-              + '<input type="hidden" name="productname" value="' + item.productname + '">'
-              + '<input type="hidden" name="amount" value="' + item.amount + '">'
-              + '<input type="hidden" name="subtotal" value="' + (item.price*item.amount) + '">'
+    var row = '<tr> <th scope="row">'+ (index+1) +'</th> <td>'+ item.productname +'</td> <td>'+ item.amount +'</td> <td>Rp. <span class="subtotal_nominal">'+ (item.price*item.amount) +'</span></td>'
+              + '<input type="hidden" name="productname[]" value="' + item.productname + '">'
+              + '<input type="hidden" name="amount[]" value="' + item.amount + '">'
+              + '<input type="hidden" name="price[]" value="' + item.price + '">'
+              + '<input type="hidden" name="subtotal[]" value="' + (item.price*item.amount) + '">'
               + '</tr>';
     table_body.append(row);
   });
-  $('.total_price span.nominal').html(total_price);
-  $('.input_total_price').val(total_price);
+  total_price = Math.floor(total_price);
+  $('.total_price span.nominal').html(formatThousandSep(total_price));
+  $('.input_total_price').val(formatThousandSep(total_price));
 }
 
+var userLocationReady;
+
 $(document).ready(function(){
+  // Get user geolocation
+  userLocationReady = window.navigator.geolocation.getCurrentPosition(function(user_geolocation) {
+    console.log('user_geolocation:'+user_geolocation.coords.latitude+','+user_geolocation.coords.longitude);
+    user_lng = user_geolocation.coords.longitude;
+    user_lat = user_geolocation.coords.latitude;
+    renderProductFinalPrice();
+  });
+
   cart = (typeof cart !== "undefined" ? cart : new $.Cart() );
 
 	updateCartBadgeIcon();
@@ -169,23 +229,11 @@ $(document).ready(function(){
     $('#modal_addcart').find('.modal_content_product').html($(this).data('productname'));
     $('#modal_addcart').modal('show');
 
-    /*
-    * items : [
-    *     {"name":"Apple","amount":3}
-    *     {"name":"Jeruk","amount":2}
-    * ]
-    */
-
     // add product to sessionStorage
-    cart._addToCart($(this).data('productname'), $(this).data('baseprice'));
+    cart._addToCart($(this).data('productname'), $(this).data('baseprice'), $(this).data('geolocation'));
 
     // update cart total
     updateCartBadgeIcon();
-
-    // calculate total items & price
-
-    console.log($(this).data('productname'));
-    console.log($(this).data('geolocation'));
   });
 
   // eventHandler emptyCart
@@ -195,18 +243,17 @@ $(document).ready(function(){
     // show modal
     $('#modal_emptycart').modal('show');
 
-    /*
-    * items : [
-    *     {"name":"Apple","amount":3}
-    *     {"name":"Jeruk","amount":2}
-    * ]
-    */
-
     // empty cart
     cart._emptyCart();
     updateCartBadgeIcon();
     renderTableRow();
 
+  });
+
+  // format nominal price
+  $('.nominal, .subtotal_nominal, .nominal_total, .order_nominal').each(function(){
+    var nominal = $(this).html();
+    $(this).html(formatThousandSep(nominal.replace('.','') ));
   });
 
 });

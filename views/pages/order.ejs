@@ -12,6 +12,13 @@
     <main>
           <h2><%=title%></h2>
 
+          <%if(messages.info){%>
+            <div class="alert alert-success" role="alert">
+              <p class="text-success text-center"><%=messages.info%></p>
+            </div>
+
+          <%}%>
+
                 <table class="table table-striped">
                 <thead>
                   <tr> <th># Order</th> <th>Name</th> <th>Total Price</th> </tr>
@@ -23,7 +30,7 @@
                    <tr>
                      <th scope="row"> <%=index+1%></th>
                      <td><%=item.name%></td>
-                     <td>Rp.<%=item.total_price%></td>
+                     <td>Rp. <span class="nominal_total"><%=item.total_price%></span></td>
                      <td><a href="/orders/<%=item._id%>">Detail</a></td>
                    </tr>
 
@@ -39,5 +46,16 @@
     </footer>
 
     <% include ../partials/scripts %>
+
+    <script>
+      <%if(messages.info){%>
+        $(function(){
+          cart._emptyCart();
+          updateCartBadgeIcon();
+          renderTableRow();
+        });
+      <%}%>
+    </script>
+
 </body>
 </html>

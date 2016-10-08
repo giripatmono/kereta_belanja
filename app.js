@@ -1,4 +1,6 @@
 var express = require('express');
+var session = require('express-session');
+var flash = require('express-flash');
 var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
@@ -19,6 +21,9 @@ app.set('views', __dirname + '/views');
 
 // Enable Logging
 app.use(logger('dev'));
+
+app.use(session({ secret:'my secret', cookie: { maxAge: 60000 }}));
+app.use(flash());
 app.use(bodyParser());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));

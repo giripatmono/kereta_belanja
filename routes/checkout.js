@@ -6,7 +6,6 @@ var Order = require('../models/order_model');
 router
 .get('/', function(req, res) {
   var title = "Checkout";
-
   res.render('pages/checkout', {
     title:title
   });
@@ -16,13 +15,17 @@ router
 
   // compile order data
   var cart = [];
+  var total_price = 0;
+
   for(var i=0;i<req.body.productname.length;i++){
-      cart.push({
-        "productname":req.body.productname[i],
-        "amount":req.body.amount[i],
-        "subtotal":req.body.subtotal[i],
-      });
+    cart.push({
+      "productname":req.body.productname[i],
+      "amount":req.body.amount[i],
+      "subtotal":req.body.subtotal[i],
+    });
+    total_price += parseInt(req.body.amount[i]) * parseInt(req.body.price[i]);
   }
+
   var order = new Order({
     cart :  cart,
     name : req.body.name,
@@ -31,11 +34,12 @@ router
     city : req.body.city,
     zipcode : req.body.zipcode,
     payment : req.body.payment,
-    total_price : req.body.total_price,
+    total_price : total_price,
   });
 
   // save order
   order.save(function(err, result){
+    req.flash('info', 'You have successfully placed an order.');
     res.redirect('/orders');
   });
 
